@@ -1,35 +1,16 @@
-const Koa = require('./lib/application')
-// const Koa = require('koa')
+const fs = require('fs')
+// const Koa = require('./lib/application')
+const Koa = require('koa')
 const app = new Koa()
-const logger = () => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      console.log('logger')
-      resolve()
-    }, 3000)
-  })
-}
+
 app.use(async (ctx, next) => {
-  console.time('start')
-  console.log(1)
-  await next()
-  await logger()
-  console.log(2)
-  ctx.body = 'welcome node !'
-  console.timeEnd('start')
+  const obj = {
+    name: 'test',
+    age: 18
+  }
+  ctx.body = fs.createReadStream('./README.md')
 })
-app.use(async (ctx, next) => {
-  console.log(3)
-  await next()
-  console.log(4)
-  ctx.body = 'welcome node !!'
-})
-app.use(async (ctx, next) => {
-  console.log(5)
-  await next()
-  console.log(6)
-  ctx.body = 'welcome node !!!'
-})
+
 app.on('error', (error) => {
   console.log(error)
 })
