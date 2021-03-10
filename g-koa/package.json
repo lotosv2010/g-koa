@@ -1,7 +1,7 @@
 {
-  "name": "g-koa",
+  "name": "gw-koa",
   "version": "1.0.0",
-  "description": "g-koa",
+  "description": "gw-koa",
   "main": "lib/application.js",
   "keywords": ["koa"],
   "author": "gwb",
