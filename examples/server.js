@@ -1,14 +1,14 @@
 const fs = require('fs')
-// const Koa = require('./lib/application')
-const Koa = require('koa')
+const Koa = require('../g-koa')
 const app = new Koa()
 
 app.use(async (ctx, next) => {
   const obj = {
-    name: 'test',
+    name: 'test1',
     age: 18
   }
-  ctx.body = fs.createReadStream('./README.md')
+  // ctx.body = fs.createReadStream('./README.md')
+  ctx.body = obj
 })
 
 app.on('error', (error) => {
