@@ -37,14 +37,15 @@ app.use(async (ctx, next) => {
   // console.log(ctx.request.path);
   // console.log(ctx.request.query);
 
-  console.log(ctx.header);
-  console.log(ctx.headers);
-  console.log(ctx.method);
-  console.log(ctx.url);
-  console.log(ctx.path);
-  console.log(ctx.query);
+  // console.log(ctx.header);
+  // console.log(ctx.headers);
+  // console.log(ctx.method);
+  // console.log(ctx.url);
+  // console.log(ctx.path);
+  // console.log(ctx.query);
 
   // ctx.body = fs.createReadStream('./README.md')
+  // ctx.body = null;
   ctx.body = obj;
 });
 

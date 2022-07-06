@@ -1,4 +1,5 @@
 const http = require('http');
+const Stream = require('stream');
 
 const context = require('./context');
 const request = require('./request');
@@ -48,7 +49,7 @@ class Application {
       // 它们之间不会互相污染
       const context = this.createContext(req, res);
       fnMiddleware(context).then(() => {
-        res.end('end');
+        respond(context);
       }).catch((error) => {
         res.end(error.message);
       });
@@ -59,6 +60,20 @@ class Application {
     const server = http.createServer(this.callback());
     server.listen(...args);
   }
+}
+
+function respond(ctx) {
+  const body = ctx.body;
+  const res = ctx.res;
+  if(body === null) {
+    res.statusCode = 204;
+    return res.end();
+  }
+  if(typeof body === 'string') return res.end(body);
+  if(Buffer.isBuffer(body)) return res.end(body);
+  if(body instanceof Stream) return body.pipe(ctx.res);
+  if(typeof body === 'number') return res.end(`${body}`);
+  if(typeof body === 'object') return res.end(JSON.stringify(body));
 }
 
 module.exports = Application;
