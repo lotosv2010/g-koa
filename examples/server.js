@@ -8,12 +8,12 @@ app.use(async (ctx, next) => {
     age: 18
   }
   // ctx.body = fs.createReadStream('./README.md')
-  ctx.body = obj
-})
+  ctx.body = obj;
+});
 
-app.on('error', (error) => {
-  console.log(error)
-})
+// app.on('error', (error) => {
+//   console.log(error)
+// });
 
 // koa的中间件原理：
 //  会将所有的中间件组合成一个大的promise，当这个promise执行完毕后，会采用当前的ctx.body 进行结果的响应
@@ -24,5 +24,5 @@ app.on('error', (error) => {
 //    2.可以决定是否向下执行(可以实现后台权限)
 //    3.可以封装一些方法在中间件中，封装后向下执行
 app.listen(3000, () => {
-  console.log(`server started port at 3000`)
-})
+  console.log(`server started port at 3000`);
+});
