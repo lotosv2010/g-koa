@@ -1,0 +1,13 @@
+lockfileVersion: 5.4
+
+specifiers:
+  delegates: ^1.0.0
+
+dependencies:
+  delegates: 1.0.0
+
+packages:
+
+  /delegates/1.0.0:
+    resolution: {integrity: sha512-bd2L678uiWATM6m5Z1VzNCErI3jiGzt6HGY8OVICs40JQq/HALfbyNJmp0UDakEY4pMMaN0Ly5om/B1VI/+xfQ==}
+    dev: false

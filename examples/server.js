@@ -30,12 +30,20 @@ app.use(async (ctx, next) => {
     name: 'test1',
     age: 18
   }
-  console.log(ctx.request.header);
-  console.log(ctx.request.headers);
-  console.log(ctx.request.method);
-  console.log(ctx.request.url);
-  console.log(ctx.request.path);
-  console.log(ctx.request.query);
+  // console.log(ctx.request.header);
+  // console.log(ctx.request.headers);
+  // console.log(ctx.request.method);
+  // console.log(ctx.request.url);
+  // console.log(ctx.request.path);
+  // console.log(ctx.request.query);
+
+  console.log(ctx.header);
+  console.log(ctx.headers);
+  console.log(ctx.method);
+  console.log(ctx.url);
+  console.log(ctx.path);
+  console.log(ctx.query);
+
   // ctx.body = fs.createReadStream('./README.md')
   ctx.body = obj;
 });
