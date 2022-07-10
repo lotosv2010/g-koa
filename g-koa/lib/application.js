@@ -1,70 +1,79 @@
-const EventEmitter = require('events')
-const http = require('http')
-const Stream = require('stream')
+const http = require('http');
+const Stream = require('stream');
 
-const context = require('./context')
-const request = require('./request')
-const response = require('./response')
+const context = require('./context');
+const request = require('./request');
+const response = require('./response');
 
-class Application extends EventEmitter {
+class Application {
   constructor() {
-    super()
+    this.middleware = [];
     // 防止多个实例共享
-    this.response = Object.create(response)
-    this.request = Object.create(request)
-    this.context = Object.create(context)
-    this.middleware = []
+    this.context = Object.create(context);
+    this.request = Object.create(request);
+    this.response = Object.create(response);
   }
-  use(callback) {
-    this.middleware.push(callback)
+  use(cb) {
+    this.middleware.push(cb);
   }
+  // 异步递归遍历调用中间件处理函数
+  compose(middleware) {
+    return function(context) {
+      const dispatch = index => {
+        if(index >= middleware.length) return Promise.resolve();
+        const fn = middleware[index];
+        return Promise.resolve(fn(context, () => dispatch(index + 1))); //! 这里是 next 函数
+      };
+      return dispatch(0);
+    }
+  }
+  // 构造上下文对象
   createContext(req, res) {
     // 每次请求都创建一个全新的上下文
-    const response = Object.create(this.response)
-    const request = Object.create(this.request)
-    const context = Object.create(this.context)
+    const response = Object.create(this.response);
+    const request = Object.create(this.request);
+    const context = Object.create(this.context);
     // 上下文中有一个 request 对象，是自己封装的对象
-    context.request = request
+    context.request = request;
     // 上下文中还有一个 req 属性，是自原生的req
     // 自己封装的 request 对象上有 req 属性
-    context.request.req = context.req = req
-    context.response = response
-    context.response.res = context.res = res
-    return context
+    context.request.req = context.req = req;
+    context.response = response;
+    context.response.res = context.res = res;
+    return context;
   }
-  compose(ctx) {
-    // 在数组中取出第一个，第一个执行后执行第二个
-    const dispatch = i => {
-      if(i === this.middleware.length) return Promise.resolve()
-      const middleware = this.middleware[i]
-      // 中间件如果不是 async 需要包装成 Promise
-      // next 方法指的是这个箭头函数
-      try {
-        return Promise.resolve(middleware(ctx, () => dispatch(i + 1)))
-      } catch (err) {
-        return Promise.reject(err)
-      }
+  callback() {
+    const fnMiddleware = this.compose(this.middleware);
+    const handleRequest = (req, res) => {
+      // 每个请求都会创建一个独立的 context 上下文对象
+      // 它们之间不会互相污染
+      const context = this.createContext(req, res);
+      fnMiddleware(context).then(() => {
+        respond(context);
+      }).catch((error) => {
+        res.end(error.message);
+      });
     }
-    return dispatch(0)
-  }
-  async handleRequest(req, res) {
-    // 创建一个上下文
-    const ctx = this.createContext(req, res)
-    await this.compose(ctx)
-    let body = ctx.body
-    if(typeof body === 'string' || Buffer.isBuffer(body)) {
-      return res.end(body)
-    } else if(body instanceof Stream) {
-      console.log(body instanceof Stream)
-      res.setHeader('Content-Disposition', `attachment;filename=${encodeURIComponent('download')}`)
-      return body.pipe(res)
-    } else if(typeof body === 'object') {
-      res.end(JSON.stringify(body))
-    }
+    return handleRequest
   }
   listen(...args) {
-    const server = http.createServer(this.handleRequest.bind(this))
-    server.listen(...args)
+    const server = http.createServer(this.callback());
+    server.listen(...args);
   }
 }
-module.exports = Application
+
+function respond(ctx) {
+  const body = ctx.body;
+  const res = ctx.res;
+  if(body === null) {
+    res.statusCode = 204;
+    return res.end();
+  }
+  if(typeof body === 'string') return res.end(body);
+  if(Buffer.isBuffer(body)) return res.end(body);
+  if(body instanceof Stream) return body.pipe(ctx.res);
+  if(typeof body === 'number') return res.end(`${body}`);
+  if(typeof body === 'object') return res.end(JSON.stringify(body));
+}
+
+module.exports = Application;
