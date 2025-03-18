@@ -2,7 +2,7 @@
   "name": "g-koa",
   "version": "1.0.0",
   "description": "g-koa",
-  "main": "src/application.js",
+  "main": "lib/application.js",
   "keywords": [
     "koa"
   ],
