@@ -1,5 +1,18 @@
 {
-	"dependencies": {
-		"delegates": "^1.0.0"
-	}
+  "name": "g-koa",
+  "version": "1.0.0",
+  "description": "g-koa",
+  "main": "src/application.js",
+  "keywords": [
+    "koa"
+  ],
+  "author": "gwb",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lotosv2010/g-koa.git"
+  },
+  "dependencies": {
+    "koa": "^2.16.0"
+  }
 }

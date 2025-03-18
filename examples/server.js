@@ -1,5 +1,6 @@
 const fs = require('fs');
-const Koa = require('../g-koa');
+const Koa = require('koa')
+// const Koa = require('../src/lib/application');
 
 const app = new Koa();
 
