@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      delegates:
+        specifier: ^1.0.0
+        version: 1.0.0
       koa:
         specifier: ^2.16.0
         version: 2.16.0
