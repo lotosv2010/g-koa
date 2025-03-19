@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div>application/x-www-form-urlencoded</div>
+  <form action="/login" method="post" enctype="application/x-www-form-urlencoded">
+    <input type="text" name="username" />
+    <input type="password" name="password" />
+    <button type="submit">登录1</button>
+  </form>
+  <div>multipart/form-data</div>
+  <form action="/login" method="post" enctype="multipart/form-data">
+    <input type="text" name="username" />
+    <input type="password" name="password" />
+    <input type="file" name="avatar" />
+    <button type="submit">登录2</button>
+  </form>
+  <div>application/json</div>
+  <button onclick="post()">登录3</button>
+  <script>
+    function post() {
+      fetch('/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username: 'admin',
+          password: '123456'
+        })
+      }).then(res => res.json()).then(data => {
+        console.log(data)
+      })
+    }
+  </script>
+</body>
+
+</html>
