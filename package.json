@@ -13,6 +13,7 @@
     "url": "https://github.com/lotosv2010/g-koa.git"
   },
   "dependencies": {
+    "@koa/router": "^13.1.0",
     "delegates": "^1.0.0",
     "koa": "^2.16.0"
   }
